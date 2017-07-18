@@ -14,6 +14,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Forms;
+using System.Reflection;
+using Microsoft.Win32;
 
 namespace WPFTest
 {
@@ -22,71 +25,7 @@ namespace WPFTest
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int WH_KEYBOARD_LL = 13;
-        private const int WM_KEYDOWN = 0x0100;
-        private const int WM_KEYUP = 0x0101;
-        private const int WM_SYSKEYDOWN = 0x0104;
-        private const int WM_SYSKEYUP = 0x0105;
-        private static LowLevelKeyboardProc _proc = HookCallback;
-        private static int _hookID = 0;
-        private delegate int LowLevelKeyboardProc(int nCode, int wParam, ref KBDLLHOOKSTRUCT IParam);
-        private static int HookCallback(int nCode, int wParam, ref KBDLLHOOKSTRUCT IParam)
-        {
-            bool bReturn = false;
-            switch (wParam)
-            {
-                case WM_KEYDOWN:
-                case WM_KEYUP:
-                case WM_SYSKEYDOWN:
-                case WM_SYSKEYUP:
-
-                    bReturn = ((IParam.vkCode == 0x09) && (IParam.flags == 0x20)) ||    //Alt + Tab
-                        ((IParam.vkCode == 0x1B) && (IParam.flags == 0x20)) ||  //Alt + Esc
-                        ((IParam.vkCode == 0x1B) && (IParam.flags == 0x00)) ||  //Ctrl + Esc
-                        ((IParam.vkCode == 0x5B) && (IParam.flags == 0x01)) ||  //Left Windows Key
-                        ((IParam.vkCode == 0x5C) && (IParam.flags == 0x01)) ||  //Right Windows Key
-                        ((IParam.vkCode == 0x73) && (IParam.flags == 0x20));    //Alt + F4
-
-                    break;
-            }
-            if (bReturn == true)
-                return 1;
-            else
-                return CallNextHookEx(0, nCode, wParam, ref IParam);
-        }
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int SetWindowsHookEx(int idHook, LowLevelKeyboardProc Ipfn, IntPtr hMod, uint dwThredId);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool UnhookWindowsHookEx(int hhk);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int CallNextHookEx(int hhk, int nCode, int wParam, ref KBDLLHOOKSTRUCT IParam);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern IntPtr GetModuleHandle(string IpModulName);
-
-        public struct KBDLLHOOKSTRUCT
-        {
-            public int vkCode;
-            public int scanCode;
-            public int flags;
-            public int time;
-            public int dwExtraInfo;
-        }
-        //
-
-        private static int SetHook(LowLevelKeyboardProc proc)
-        {
-            using (Process curProcess = Process.GetCurrentProcess())
-            using (ProcessModule curModule = curProcess.MainModule)
-            {
-                return SetWindowsHookEx(WH_KEYBOARD_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
-
-            }
-        }
+        public static LockWindow[] lw = new LockWindow[5];
         public MainWindow()
         {
             InitializeComponent();
@@ -94,7 +33,103 @@ namespace WPFTest
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _hookID = SetHook(_proc);
+            frame.Navigate(new WPFTest.Pages.DownloadPage());
+            RegistryKey k = Registry.CurrentUser.OpenSubKey("Windlocker");
+            var a = k.GetValue("token");
+            if (a!=null)
+            {
+                if(Server.Auto(a.ToString()))
+                {
+                    Session.Token = a.ToString();
+                }
+            }
+            //
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            NotifyIcon n = new NotifyIcon();
+            n.Icon = Properties.Resources.Logo1;
+            n.Visible = true;
+            n.DoubleClick += delegate(object senders,EventArgs ev)
+            {
+                Show();
+                n.Dispose();
+            };
+            n.BalloonTipTitle = "Windlocker가 백그라운드에서 실행됩니다.";
+            n.BalloonTipText = "Windlocker Service가 백그라운드에서 계속 실행됩니다.";
+            n.ShowBalloonTip(1000);
+            Hide();
+        }
+
+        protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseLeftButtonDown(e);
+
+            // Begin dragging the window
+            this.DragMove();
+        }
+
+        private void lblLogin_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
+        }
+
+        private void lblClose_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.Close();
+        }
+
+        private void lblLogin_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            LoginWindow lw = new LoginWindow();
+            lw.ShowDialog();
+        }
+
+        private void lblLock_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Lock();
+        }
+
+        public static void Lock()
+        {
+            int cnt = 0;
+            var dpiX = (int)typeof(SystemParameters).GetProperty("DpiX", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null, null);
+            var dpiY = (int)typeof(SystemParameters).GetProperty("Dpi", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null, null);
+            foreach (var scr in Screen.AllScreens)
+            {
+                LockWindow l = new LockWindow()
+                {
+                    WindowStartupLocation = WindowStartupLocation.Manual
+                };
+                lw[cnt] = l;
+                System.Drawing.Rectangle workingArea = scr.WorkingArea;
+                l.Left = workingArea.Left * (96 / dpiX);
+                l.Top = workingArea.Top * (96 / dpiY);
+                l.Width = workingArea.Width;
+                l.Height = workingArea.Height+40;
+                //l.WindowState = WindowState.Maximized;
+                l.WindowStyle = WindowStyle.None;
+                l.Topmost = true;
+                l.Show();
+            }
+        }
+
+        public static void UnLock()
+        {
+            for(int i = 0;i<5;i++)
+            {
+                if(lw[i] != null)
+                {
+                    lw[i].Close();
+                }
+            }
+        }
+
+        private void lblUpload_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            frame.Navigate(new WPFTest.Pages.UploadPage());
         }
     }
 }

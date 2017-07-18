@@ -5,9 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFTest"
         mc:Ignorable="d"
-        WindowState="Maximized"
-        Topmost="True"
-        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded" WindowStyle="None">
+        
+        Title="MainWindow" Height="350" Width="525" Loaded="Window_Loaded" WindowStyle="None" Closing="Window_Closing" ResizeMode="NoResize">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="120"/>
@@ -17,16 +16,19 @@
             <RowDefinition Height="25"/>
             <RowDefinition Height="35*"/>
         </Grid.RowDefinitions>
-        <Frame Content="Frame" Grid.Column="1" Grid.Row="1"/>
+        <Frame Name="frame" Content="Frame" Grid.Column="1" Grid.Row="1" NavigationUIVisibility="Hidden"/>
         <Grid Grid.Row="1" Background="#FF29B6F6">
-            <Image HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" Source="Resources/Logo.png"/>
-            <Label Content="파일" HorizontalAlignment="Center" Margin="0,115,0,0" VerticalAlignment="Top"/>
-            <Label Content="설정" HorizontalAlignment="Center" Margin="0,150,0,0" VerticalAlignment="Top"/>
-            <Label Content="로그인" HorizontalAlignment="Center" Margin="0,185,0,0" VerticalAlignment="Top"/>
+            <Image HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" Source="Resources/logo_and_type.png"/>
+            <Label Name="lblDownload" Content="파일 다운로드" HorizontalAlignment="Center" Margin="0,115,0,0" VerticalAlignment="Top"/>
+            <Label Name="lblUpload" Content="파일 업로드" HorizontalAlignment="Center" Margin="0,150,0,0" VerticalAlignment="Top" PreviewMouseDown="lblUpload_PreviewMouseDown"/>
+            <Label Name="lblSetting" Content="설정" HorizontalAlignment="Center" Margin="0,185,0,0" VerticalAlignment="Top"/>
+            <Label Name="lblLogin" Content="로그인" HorizontalAlignment="Center" Margin="0,220,0,0" VerticalAlignment="Top" PreviewMouseLeftButtonUp="lblLogin_PreviewMouseLeftButtonUp" PreviewMouseDown="lblLogin_PreviewMouseDown"/>
+            <Label Name="lblLock" Content="잠금" HorizontalAlignment="Center" Margin="0,255,0,0" VerticalAlignment="Top" PreviewMouseDown="lblLock_PreviewMouseDown" />
+
         </Grid>
         <Grid Grid.ColumnSpan="2" Background="#FF0082BA">
-            <Label Padding="9,3.5,3,0" Content="X" HorizontalAlignment="Right" Width="25"/>
+            <Label Name="lblClose" Padding="9,3.5,3,0" Content="X" HorizontalAlignment="Right" Width="25" PreviewMouseDown="lblClose_PreviewMouseDown"/>
         </Grid>
-
+           
     </Grid>
 </Window>

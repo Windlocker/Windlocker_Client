@@ -8,6 +8,24 @@
       Title="DownloadPage">
 
     <Grid>
-        
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48*"/>
+                <ColumnDefinition Width="128*"/>
+                <ColumnDefinition Width="48*"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <Label Content="인증번호 입력" HorizontalAlignment="Center" FontFamily="NanumBarunGothic"></Label>
+                <TextBox Height="28" TextWrapping="Wrap" Text="" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="#FF039BE5" Foreground="#FF039BE5" FontFamily="NanumBarunGothic" Padding="0,5,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Center">
+                <Button Content="다운로드" Background="{x:Null}" Foreground="White" BorderBrush="#FF039BE5"/>
+            </StackPanel>
+
+        </Grid>
     </Grid>
 </Page>
