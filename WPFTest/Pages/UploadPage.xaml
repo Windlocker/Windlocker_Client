@@ -25,10 +25,10 @@
         <Button x:Name="btnFile" Grid.Column="2" Content="파일 선택" Grid.Row="1" Background="{x:Null}" Foreground="black" BorderBrush="#FF039BE5" Click="btnFile_Click" />
         <StackPanel Grid.Column="2" Grid.Row="2" VerticalAlignment="Center" Margin="0,51,0,50">
             <Label Content="인증번호 확인" HorizontalAlignment="Center" FontFamily="NanumBarunGothic"></Label>
-            <TextBox Height="28" TextWrapping="Wrap" Text="" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="#FF039BE5" Foreground="#FF039BE5" FontFamily="NanumBarunGothic" Padding="0,5,0,0"/>
-            <Button Content="업로드" Margin="0,10,0,0 " Background="{x:Null}" Foreground="black" BorderBrush="#FF039BE5"/>
+            <TextBox Name="txtKey" Height="28" TextWrapping="Wrap" Text="" HorizontalContentAlignment="Center" Background="{x:Null}" BorderBrush="#FF039BE5" Foreground="#FF039BE5" FontFamily="NanumBarunGothic" Padding="0,5,0,0" IsEnabled="False"/>
+            <Button Content="업로드" Margin="0,10,0,0 " Background="{x:Null}" Foreground="black" BorderBrush="#FF039BE5" Click="Button_Click"/>
         </StackPanel>
-        <Button x:Name="btnClear" Content="초기화" Grid.Row="1" Background="{x:Null}" Foreground="black" BorderBrush="#FF039BE5"  Grid.Column="1" />
-        <Button x:Name="btnRemove" Grid.Column="3" Content="파일 선택" Grid.Row="1" Background="{x:Null}" Foreground="black" BorderBrush="#FF039BE5" Click="btnFile_Click" />
+        <Button x:Name="btnClear" Content="초기화" Grid.Row="1" Background="{x:Null}" Foreground="black" BorderBrush="#FF039BE5"  Grid.Column="1" Click="btnClear_Click" />
+        <Button x:Name="btnRemove" Grid.Column="3" Content="삭제" Grid.Row="1" Background="{x:Null}" Foreground="black" BorderBrush="#FF039BE5" Click="btnRemove_Click" />
     </Grid>
 </Page>

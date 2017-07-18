@@ -74,5 +74,30 @@ namespace WPFTest.Pages
                 }
             }
         }
+
+        private void btnClear_Click(object sender, RoutedEventArgs e)
+        {
+            Files.Clear();
+            FileListBox.Items.Clear();
+        }
+
+        private void btnRemove_Click(object sender, RoutedEventArgs e)
+        {
+           List Collection = FileListBox.SelectedItems as List;
+            
+            if(Collection.ListItems.Count > 0)
+            {
+                foreach(var item in Collection.ListItems)
+                {
+                    //Files.Remove(item);
+                    //FileListBox.Items.RemoveAt(FileListBox.Items.IndexOf(item));
+                }
+            }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            txtKey.Text = Server.POST_FILE("http://iwin247.kr:3002/upload", FileListBox.Items[0].ToString());
+        }
     }
 }

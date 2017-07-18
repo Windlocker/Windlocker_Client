@@ -12,8 +12,8 @@
         <ImageBrush ImageSource="pack://siteoforigin:,,,/Resources/169.png"/>
     </Window.Background>
     <Grid>
-        <Label Content="02:51" HorizontalAlignment="Left" Margin="30,0,0,130" VerticalAlignment="Bottom" Height="139" Width="780" FontSize="100" FontFamily="NanumBarunGothic" Foreground="White"/>
-        <Label Content="7월 16일 금요일" HorizontalAlignment="Left" Margin="30,0,0,10" VerticalAlignment="Bottom" Height="139" Width="780" FontSize="100" FontFamily="NanumBarunGothic" Foreground="White"/>
-        <Button Content="Close" HorizontalAlignment="Left" Margin="661,62,0,0" VerticalAlignment="Top" Width="270" Height="72" Click="Button_Click" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}"/>
+        <Label Name="lblTime" Content="02:51" HorizontalAlignment="Left" Margin="30,0,0,130" VerticalAlignment="Bottom" Height="139" Width="780" FontSize="100" FontFamily="NanumBarunGothic" Foreground="White"/>
+        <Label Name="lblDate" Content="7월 16일 금요일" HorizontalAlignment="Left" Margin="30,0,0,10" VerticalAlignment="Bottom" Height="139" Width="780" FontSize="100" FontFamily="NanumBarunGothic" Foreground="White"/>
+        <Button Content="Close" HorizontalAlignment="Left" Margin="661,62,0,0" VerticalAlignment="Top" Width="270" Height="72" Click="Button_Click" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black"/>
     </Grid>
 </Window>

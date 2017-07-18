@@ -26,6 +26,8 @@ namespace WPFTest
     public partial class MainWindow : Window
     {
         public static LockWindow[] lw = new LockWindow[5];
+        public static LockWindow l = new LockWindow();
+        private static bool IsLocked = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -43,6 +45,7 @@ namespace WPFTest
                     Session.Token = a.ToString();
                 }
             }
+            Interaction.StartTimer();
             //
         }
 
@@ -99,7 +102,7 @@ namespace WPFTest
             var dpiY = (int)typeof(SystemParameters).GetProperty("Dpi", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null, null);
             foreach (var scr in Screen.AllScreens)
             {
-                LockWindow l = new LockWindow()
+                l = new LockWindow()
                 {
                     WindowStartupLocation = WindowStartupLocation.Manual
                 };
@@ -114,6 +117,7 @@ namespace WPFTest
                 l.Topmost = true;
                 l.Show();
             }
+            IsLocked = true;
         }
 
         public static void UnLock()
@@ -125,6 +129,7 @@ namespace WPFTest
                     lw[i].Close();
                 }
             }
+            IsLocked = false;
         }
 
         private void lblUpload_PreviewMouseDown(object sender, MouseButtonEventArgs e)

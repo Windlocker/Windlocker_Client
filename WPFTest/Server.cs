@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -29,6 +30,33 @@ namespace WPFTest
             }
         }
 
+        public static string POST_FILE(string URL, string Filename)
+        {
+            try
+            {
+                FileStream stream = File.Open(Filename, FileMode.Open);
+                StreamContent scontent = new StreamContent(stream);
+                scontent.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("form-data")
+                {
+                    FileName = Filename,
+                    Name = "file"
+                };
+                scontent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("image/png");
+                var client = new HttpClient();
+                var multi = new MultipartFormDataContent();
+                multi.Add(scontent);
+                client.BaseAddress = new Uri("http://iwin247.kr:3002/");
+                var result = client.PostAsync("upload/", multi).Result;
+                Console.WriteLine(result.ReasonPhrase);
+                return result.Content.ReadAsStringAsync().Result;
+            }
+            catch(Exception)
+            {
+                return "error";
+            }
+
+            }
+
         public static string POST(string URL, string Content)
         {
             var request = (HttpWebRequest)WebRequest.Create(URL);
@@ -49,7 +77,7 @@ namespace WPFTest
             }
             catch (WebException we)
             {
-                Console.WriteLine(((HttpWebResponse)we.Response).StatusCode);
+                //Console.WriteLine(((HttpWebResponse)we.Response).StatusCode);
                 return "";
             }
         }
@@ -85,7 +113,7 @@ namespace WPFTest
 
         public static bool Auto(string token)
         {
-            string get = GET(SERVER_URL,"/" + token);
+            string get = GET(SERVER_URL,"/auth/auto/" + token);
             if (get != "")
                 return true;
             else
@@ -94,7 +122,7 @@ namespace WPFTest
 
         public static bool IsLock(string token)
         {
-            string get = GET(SERVER_URL, "/" + token);
+            string get = GET(SERVER_URL, "/lock/" + token);
             if (get != "")
                 return true;
             else

@@ -101,6 +101,8 @@ namespace WPFTest
 
         private void Timer_Tick(object sender, EventArgs e)
         {
+            lblTime.Content = DateTime.Now.ToString("hh:mm");
+            lblDate.Content = DateTime.Now.ToString("MM월 dd일 ddd");
             //LockWindows.Focus();
             //LockWindows.Activate();
         }
